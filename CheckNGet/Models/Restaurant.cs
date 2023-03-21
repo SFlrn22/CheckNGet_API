@@ -2,12 +2,12 @@
 {
     public class Restaurant
     {
-        public int ID { get; set; }
-        public string RestaurantName { get; set; }
-        public string RestaurantAddress { get; set; }
-        public decimal ContactNumber { get; set; }
-        public string ContactAddress { get; set; }
-        public string ImgUrl { get; set; }
+        public int Id { get; set; }
+        public string RestaurantName { get; set; } = null!;
+        public string RestaurantAddress { get; set; } = null!;
+        public string ContactNumber { get; set; }
+        public string ContactAddress { get; set; } = null!;
+        public string ImgUrl { get; set; } = null!;
         public ICollection<Menu> Menus { get; set; }
     }
 }

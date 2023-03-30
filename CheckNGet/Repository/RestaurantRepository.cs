@@ -1,4 +1,5 @@
-﻿using CheckNGet.Data;
+﻿using AutoMapper;
+using CheckNGet.Data;
 using CheckNGet.Interface;
 using CheckNGet.Models;
 
@@ -7,6 +8,7 @@ namespace CheckNGet.Repository
     public class RestaurantRepository : IRestaurantRepository
     {
         private readonly DBContext _context;
+
         public RestaurantRepository(DBContext context) 
         {
             _context = context;

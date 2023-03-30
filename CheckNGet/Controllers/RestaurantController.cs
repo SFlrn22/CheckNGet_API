@@ -37,7 +37,7 @@ namespace CheckNGet.Controllers
             if (!_restaurantRepository.RestaurantExists(restaurantId))
                 return NotFound();
 
-            var restaurant = _mapper.Map<Restaurant>(_restaurantRepository.GetRestaurant(restaurantId));
+            var restaurant = _mapper.Map<RestaurantDTO>(_restaurantRepository.GetRestaurant(restaurantId));
 
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);

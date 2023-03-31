@@ -21,7 +21,7 @@ namespace CheckNGet.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<Restaurant>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Category>))]
         public IActionResult GetCategories()
         {
             var categories = _mapper.Map<List<CategoryDTO>>(_categoryRepository.GetCategories());
@@ -46,8 +46,8 @@ namespace CheckNGet.Controllers
 
             return Ok(category);
         }
-        [HttpGet("item/{categoryId}")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<Category>))]
+        [HttpGet("dish/{categoryId}")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Dish>))]
         [ProducesResponseType(400)]
         public IActionResult GetItemByCategoryId(int categoryId)
         {

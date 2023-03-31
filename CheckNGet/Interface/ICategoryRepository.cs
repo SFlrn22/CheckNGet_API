@@ -6,7 +6,7 @@ namespace CheckNGet.Interface
     {
         ICollection<Category> GetCategories();
         Category GetCategory(int id);
-        ICollection<FoodItem> GetItemByCategory(int categoriaId);
+        ICollection<Dish> GetDishByCategory(int categoryId);
         bool CategoryExists(int id);
     }
 }

@@ -8,6 +8,6 @@
         public string? ContactNumber { get; set; }
         public string ContactAddress { get; set; } = null!;
         public string ImgUrl { get; set; } = null!;
-        public ICollection<Menu> Menus { get; set; }
+        public ICollection<RestaurantDish> RestaurantDishes { get; set; }
     }
 }

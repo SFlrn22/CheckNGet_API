@@ -43,22 +43,22 @@ namespace CheckNGet.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("CheckNGet.Models.CategoryItem", b =>
+            modelBuilder.Entity("CheckNGet.Models.CategoryDish", b =>
                 {
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int>("FoodItemId")
+                    b.Property<int>("DishId")
                         .HasColumnType("int");
 
-                    b.HasKey("CategoryId", "FoodItemId");
+                    b.HasKey("CategoryId", "DishId");
 
-                    b.HasIndex("FoodItemId");
+                    b.HasIndex("DishId");
 
-                    b.ToTable("CategoryItems");
+                    b.ToTable("CategoryDishes");
                 });
 
-            modelBuilder.Entity("CheckNGet.Models.FoodItem", b =>
+            modelBuilder.Entity("CheckNGet.Models.Dish", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -80,40 +80,7 @@ namespace CheckNGet.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FoodItems");
-                });
-
-            modelBuilder.Entity("CheckNGet.Models.Menu", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("RestaurantId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RestaurantId");
-
-                    b.ToTable("Menus");
-                });
-
-            modelBuilder.Entity("CheckNGet.Models.MenuItem", b =>
-                {
-                    b.Property<int>("MenuId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FoodItemId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MenuId", "FoodItemId");
-
-                    b.HasIndex("FoodItemId");
-
-                    b.ToTable("MenuItems");
+                    b.ToTable("Dishes");
                 });
 
             modelBuilder.Entity("CheckNGet.Models.Order", b =>
@@ -141,19 +108,19 @@ namespace CheckNGet.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("CheckNGet.Models.OrderItem", b =>
+            modelBuilder.Entity("CheckNGet.Models.OrderDish", b =>
                 {
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<int>("FoodItemId")
+                    b.Property<int>("DishId")
                         .HasColumnType("int");
 
-                    b.HasKey("OrderId", "FoodItemId");
+                    b.HasKey("OrderId", "DishId");
 
-                    b.HasIndex("FoodItemId");
+                    b.HasIndex("DishId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderDishes");
                 });
 
             modelBuilder.Entity("CheckNGet.Models.Restaurant", b =>
@@ -169,7 +136,6 @@ namespace CheckNGet.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContactNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImgUrl")
@@ -187,6 +153,21 @@ namespace CheckNGet.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Restaurants");
+                });
+
+            modelBuilder.Entity("CheckNGet.Models.RestaurantDish", b =>
+                {
+                    b.Property<int>("RestaurantId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DishId")
+                        .HasColumnType("int");
+
+                    b.HasKey("RestaurantId", "DishId");
+
+                    b.HasIndex("DishId");
+
+                    b.ToTable("RestaurantDishes");
                 });
 
             modelBuilder.Entity("CheckNGet.Models.User", b =>
@@ -229,53 +210,23 @@ namespace CheckNGet.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("CheckNGet.Models.CategoryItem", b =>
+            modelBuilder.Entity("CheckNGet.Models.CategoryDish", b =>
                 {
                     b.HasOne("CheckNGet.Models.Category", "Category")
-                        .WithMany("CategoryItems")
+                        .WithMany("CategoryDishes")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CheckNGet.Models.FoodItem", "FoodItem")
-                        .WithMany("CategoryItems")
-                        .HasForeignKey("FoodItemId")
+                    b.HasOne("CheckNGet.Models.Dish", "Dish")
+                        .WithMany("CategoryDishes")
+                        .HasForeignKey("DishId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
 
-                    b.Navigation("FoodItem");
-                });
-
-            modelBuilder.Entity("CheckNGet.Models.Menu", b =>
-                {
-                    b.HasOne("CheckNGet.Models.Restaurant", "Restaurant")
-                        .WithMany("Menus")
-                        .HasForeignKey("RestaurantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Restaurant");
-                });
-
-            modelBuilder.Entity("CheckNGet.Models.MenuItem", b =>
-                {
-                    b.HasOne("CheckNGet.Models.FoodItem", "FoodItem")
-                        .WithMany("MenuItems")
-                        .HasForeignKey("FoodItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CheckNGet.Models.Menu", "Menu")
-                        .WithMany("MenuItems")
-                        .HasForeignKey("MenuId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("FoodItem");
-
-                    b.Navigation("Menu");
+                    b.Navigation("Dish");
                 });
 
             modelBuilder.Entity("CheckNGet.Models.Order", b =>
@@ -289,52 +240,66 @@ namespace CheckNGet.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CheckNGet.Models.OrderItem", b =>
+            modelBuilder.Entity("CheckNGet.Models.OrderDish", b =>
                 {
-                    b.HasOne("CheckNGet.Models.FoodItem", "FoodItem")
-                        .WithMany("OrderItems")
-                        .HasForeignKey("FoodItemId")
+                    b.HasOne("CheckNGet.Models.Dish", "Dish")
+                        .WithMany("OrderDishes")
+                        .HasForeignKey("DishId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CheckNGet.Models.Order", "Order")
-                        .WithMany("OrderItems")
+                        .WithMany("OrderDishes")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("FoodItem");
+                    b.Navigation("Dish");
 
                     b.Navigation("Order");
                 });
 
+            modelBuilder.Entity("CheckNGet.Models.RestaurantDish", b =>
+                {
+                    b.HasOne("CheckNGet.Models.Dish", "Dish")
+                        .WithMany("RestaurantDishes")
+                        .HasForeignKey("DishId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CheckNGet.Models.Restaurant", "Restaurant")
+                        .WithMany("RestaurantDishes")
+                        .HasForeignKey("RestaurantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Dish");
+
+                    b.Navigation("Restaurant");
+                });
+
             modelBuilder.Entity("CheckNGet.Models.Category", b =>
                 {
-                    b.Navigation("CategoryItems");
+                    b.Navigation("CategoryDishes");
                 });
 
-            modelBuilder.Entity("CheckNGet.Models.FoodItem", b =>
+            modelBuilder.Entity("CheckNGet.Models.Dish", b =>
                 {
-                    b.Navigation("CategoryItems");
+                    b.Navigation("CategoryDishes");
 
-                    b.Navigation("MenuItems");
+                    b.Navigation("OrderDishes");
 
-                    b.Navigation("OrderItems");
-                });
-
-            modelBuilder.Entity("CheckNGet.Models.Menu", b =>
-                {
-                    b.Navigation("MenuItems");
+                    b.Navigation("RestaurantDishes");
                 });
 
             modelBuilder.Entity("CheckNGet.Models.Order", b =>
                 {
-                    b.Navigation("OrderItems");
+                    b.Navigation("OrderDishes");
                 });
 
             modelBuilder.Entity("CheckNGet.Models.Restaurant", b =>
                 {
-                    b.Navigation("Menus");
+                    b.Navigation("RestaurantDishes");
                 });
 
             modelBuilder.Entity("CheckNGet.Models.User", b =>

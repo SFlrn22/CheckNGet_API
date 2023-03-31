@@ -10,7 +10,7 @@ namespace CheckNGet.Helper
         {
             CreateMap<Restaurant, RestaurantDTO>();
             CreateMap<Category, CategoryDTO>();
-            CreateMap<FoodItem, FoodItemDTO>();
+            CreateMap<Dish, DishDTO>();
         }
     }
 }

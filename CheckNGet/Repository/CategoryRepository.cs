@@ -27,9 +27,9 @@ namespace CheckNGet.Repository
             return _context.Categories.Where(c => c.Id == id).FirstOrDefault();
         }
 
-        public ICollection<FoodItem> GetItemByCategory(int categoriaId)
+        public ICollection<Dish> GetDishByCategory(int categoryId)
         {
-            return _context.CategoryItems.Where(c => c.CategoryId == categoriaId).Select(i => i.FoodItem).ToList();
+            return _context.CategoryDishes.Where(c => c.CategoryId == categoryId).Select(i => i.Dish).ToList();
         }
     }
 }

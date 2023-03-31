@@ -1,6 +1,6 @@
 ﻿namespace CheckNGet.Models.DTO
 {
-    public class FoodItemDTO
+    public class DishDTO
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;

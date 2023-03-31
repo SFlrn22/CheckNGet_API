@@ -26,7 +26,7 @@ namespace CheckNGet.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FoodItems",
+                name: "Dishes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -37,7 +37,7 @@ namespace CheckNGet.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FoodItems", x => x.Id);
+                    table.PrimaryKey("PK_Dishes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -48,7 +48,7 @@ namespace CheckNGet.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RestaurantName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RestaurantAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ContactNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ContactNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ContactAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ImgUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -77,42 +77,47 @@ namespace CheckNGet.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CategoryItems",
+                name: "CategoryDishes",
                 columns: table => new
                 {
                     CategoryId = table.Column<int>(type: "int", nullable: false),
-                    FoodItemId = table.Column<int>(type: "int", nullable: false)
+                    DishId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CategoryItems", x => new { x.CategoryId, x.FoodItemId });
+                    table.PrimaryKey("PK_CategoryDishes", x => new { x.CategoryId, x.DishId });
                     table.ForeignKey(
-                        name: "FK_CategoryItems_Categories_CategoryId",
+                        name: "FK_CategoryDishes_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CategoryItems_FoodItems_FoodItemId",
-                        column: x => x.FoodItemId,
-                        principalTable: "FoodItems",
+                        name: "FK_CategoryDishes_Dishes_DishId",
+                        column: x => x.DishId,
+                        principalTable: "Dishes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Menus",
+                name: "RestaurantDishes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RestaurantId = table.Column<int>(type: "int", nullable: false)
+                    RestaurantId = table.Column<int>(type: "int", nullable: false),
+                    DishId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Menus", x => x.Id);
+                    table.PrimaryKey("PK_RestaurantDishes", x => new { x.RestaurantId, x.DishId });
                     table.ForeignKey(
-                        name: "FK_Menus_Restaurants_RestaurantId",
+                        name: "FK_RestaurantDishes_Dishes_DishId",
+                        column: x => x.DishId,
+                        principalTable: "Dishes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RestaurantDishes_Restaurants_RestaurantId",
                         column: x => x.RestaurantId,
                         principalTable: "Restaurants",
                         principalColumn: "Id",
@@ -141,47 +146,23 @@ namespace CheckNGet.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MenuItems",
-                columns: table => new
-                {
-                    MenuId = table.Column<int>(type: "int", nullable: false),
-                    FoodItemId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MenuItems", x => new { x.MenuId, x.FoodItemId });
-                    table.ForeignKey(
-                        name: "FK_MenuItems_FoodItems_FoodItemId",
-                        column: x => x.FoodItemId,
-                        principalTable: "FoodItems",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_MenuItems_Menus_MenuId",
-                        column: x => x.MenuId,
-                        principalTable: "Menus",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "OrderItems",
+                name: "OrderDishes",
                 columns: table => new
                 {
                     OrderId = table.Column<int>(type: "int", nullable: false),
-                    FoodItemId = table.Column<int>(type: "int", nullable: false)
+                    DishId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderItems", x => new { x.OrderId, x.FoodItemId });
+                    table.PrimaryKey("PK_OrderDishes", x => new { x.OrderId, x.DishId });
                     table.ForeignKey(
-                        name: "FK_OrderItems_FoodItems_FoodItemId",
-                        column: x => x.FoodItemId,
-                        principalTable: "FoodItems",
+                        name: "FK_OrderDishes_Dishes_DishId",
+                        column: x => x.DishId,
+                        principalTable: "Dishes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OrderItems_Orders_OrderId",
+                        name: "FK_OrderDishes_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "Id",
@@ -189,54 +170,46 @@ namespace CheckNGet.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CategoryItems_FoodItemId",
-                table: "CategoryItems",
-                column: "FoodItemId");
+                name: "IX_CategoryDishes_DishId",
+                table: "CategoryDishes",
+                column: "DishId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MenuItems_FoodItemId",
-                table: "MenuItems",
-                column: "FoodItemId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Menus_RestaurantId",
-                table: "Menus",
-                column: "RestaurantId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_FoodItemId",
-                table: "OrderItems",
-                column: "FoodItemId");
+                name: "IX_OrderDishes_DishId",
+                table: "OrderDishes",
+                column: "DishId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_UserId",
                 table: "Orders",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RestaurantDishes_DishId",
+                table: "RestaurantDishes",
+                column: "DishId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CategoryItems");
+                name: "CategoryDishes");
 
             migrationBuilder.DropTable(
-                name: "MenuItems");
+                name: "OrderDishes");
 
             migrationBuilder.DropTable(
-                name: "OrderItems");
+                name: "RestaurantDishes");
 
             migrationBuilder.DropTable(
                 name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "Menus");
-
-            migrationBuilder.DropTable(
-                name: "FoodItems");
-
-            migrationBuilder.DropTable(
                 name: "Orders");
+
+            migrationBuilder.DropTable(
+                name: "Dishes");
 
             migrationBuilder.DropTable(
                 name: "Restaurants");

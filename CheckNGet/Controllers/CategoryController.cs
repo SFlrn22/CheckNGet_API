@@ -51,7 +51,7 @@ namespace CheckNGet.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetItemByCategoryId(int categoryId)
         {
-            var items = _mapper.Map<List<FoodItemDTO>>(_categoryRepository.GetItemByCategory(categoryId));
+            var items = _mapper.Map<List<DishDTO>>(_categoryRepository.GetDishByCategory(categoryId));
 
             if (!ModelState.IsValid)
                 return BadRequest();

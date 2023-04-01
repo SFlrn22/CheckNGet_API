@@ -20,6 +20,12 @@ namespace CheckNGet.Repository
             return Save();
         }
 
+        public bool DeleteRestaurant(Restaurant restaurant)
+        {
+            _context.Remove(restaurant);
+            return Save();
+        }
+
         public ICollection<Dish> GetDishByRestaurant(int restaurantId)
         {
             return _context.RestaurantDishes.Where(r => r.RestaurantId == restaurantId).Select(d => d.Dish).ToList();

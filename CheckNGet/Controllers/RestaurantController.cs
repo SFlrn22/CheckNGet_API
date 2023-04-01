@@ -118,5 +118,27 @@ namespace CheckNGet.Controllers
 
             return NoContent();
         }
+        [HttpDelete("{restaurantId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteRestaurant(int restaurantId)
+        {
+            if (!_restaurantRepository.RestaurantExists(restaurantId))
+                return NotFound();
+
+            var restaurantToDelete = _restaurantRepository.GetRestaurant(restaurantId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_restaurantRepository.DeleteRestaurant(restaurantToDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong deleting restaurant");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+        }
     }
 }

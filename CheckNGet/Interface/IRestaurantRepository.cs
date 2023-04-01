@@ -11,6 +11,7 @@ namespace CheckNGet.Interface
         bool RestaurantExists(int restaurantId);
         bool CreateRestaurant(Restaurant restaurant);
         bool UpdateRestaurant(Restaurant restaurant);
+        bool DeleteRestaurant(Restaurant restaurant);
         bool Save();
     }
 }

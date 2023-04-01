@@ -12,6 +12,7 @@ namespace CheckNGet.Interface
         bool UserExists(string username);
         bool CreateUser(User user);
         bool UpdateUser(User user);
+        bool DeleteUser(User user);
         bool Save();
     }
 }

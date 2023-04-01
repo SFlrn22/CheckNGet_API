@@ -13,6 +13,32 @@ namespace CheckNGet.Repository
         {
             _context = context;
         }
+
+        public bool CreateDish(int restaurantId, int categoryId, Dish dish)
+        {
+            var restaurant = _context.Restaurants.Where(r => r.Id == restaurantId).FirstOrDefault();
+
+            var category = _context.Categories.Where(c => c.Id == categoryId).FirstOrDefault();
+
+            var restaurantDish = new RestaurantDish
+            {
+                Restaurant = restaurant,
+                Dish = dish
+            };
+
+            var categoryDish = new CategoryDish
+            {
+                Category = category,
+                Dish = dish
+            };
+
+            _context.Add(restaurantDish);
+            _context.Add(categoryDish);
+            _context.Add(dish);
+
+            return Save();
+        }
+
         public bool DishExists(int id)
         {
             return _context.Dishes.Any(fi => fi.Id == id);
@@ -31,6 +57,12 @@ namespace CheckNGet.Repository
         public ICollection<Dish> GetDishes()
         {
             return _context.Dishes.OrderBy(fi => fi.Id).ToList();
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
         }
     }
 }

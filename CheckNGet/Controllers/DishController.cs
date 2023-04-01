@@ -46,5 +46,37 @@ namespace CheckNGet.Controllers
 
             return Ok(dish);
         }
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateDish([FromQuery] int restaurantId, [FromQuery] int categoryId, [FromBody] DishDTO dishCreate)
+        {
+            if (dishCreate == null)
+                return BadRequest(ModelState);
+
+            var dish = _dishRepository.GetDishes()
+                .Where(d=> d.Name.Trim().ToUpper() == dishCreate.Name.TrimEnd().ToUpper())
+                .FirstOrDefault();
+
+            if (dish != null)
+            {
+                ModelState.AddModelError("", "Dish already exists!");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var dishMap = _mapper.Map<Dish>(dishCreate);
+
+            if (!_dishRepository.CreateDish(restaurantId, categoryId, dishMap))
+            {
+                ModelState.AddModelError("", "Something went wrong with saving!");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Successfully created!");
+
+        }
     }
 }

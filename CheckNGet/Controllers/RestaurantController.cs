@@ -44,5 +44,37 @@ namespace CheckNGet.Controllers
 
             return Ok(restaurant);
         }
+
+        [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateRestaurant([FromBody] RestaurantDTO restaurantCreate)
+        {
+            if (restaurantCreate == null)
+                return BadRequest(ModelState);
+
+            var restaurant = _restaurantRepository.GetRestaurants()
+                .Where(r => r.RestaurantName.Trim().ToUpper() == restaurantCreate.RestaurantName.TrimEnd().ToUpper())
+                .FirstOrDefault();
+
+            if (restaurant != null)
+            {
+                ModelState.AddModelError("", "Restaurant already exists!");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var restaurantMap = _mapper.Map<Restaurant>(restaurantCreate);
+
+            if (!_restaurantRepository.CreateRestaurant(restaurantMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving!");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Successfully created!");
+        }
     }
 }

@@ -9,6 +9,7 @@ namespace CheckNGet.Helper
         public MappingProfiles()
         {
             CreateMap<Restaurant, RestaurantDTO>();
+            CreateMap<RestaurantDTO, Restaurant>();
             CreateMap<Category, CategoryDTO>();
             CreateMap<Dish, DishDTO>();
             CreateMap<User, UserDTO>();

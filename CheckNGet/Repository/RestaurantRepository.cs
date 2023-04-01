@@ -14,6 +14,12 @@ namespace CheckNGet.Repository
             _context = context;
         }
 
+        public bool CreateRestaurant(Restaurant restaurant)
+        {
+            _context.Add(restaurant);
+            return Save();
+        }
+
         public Restaurant GetRestaurant(int id)
         {
             return _context.Restaurants.Where(r => r.Id == id).FirstOrDefault();
@@ -32,6 +38,12 @@ namespace CheckNGet.Repository
         public bool RestaurantExists(int restaurantId)
         {
             return _context.Restaurants.Any(r => r.Id == restaurantId);
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
         }
     }
 }

@@ -8,5 +8,7 @@ namespace CheckNGet.Interface
         Restaurant GetRestaurant(int id);
         Restaurant GetRestaurant(string name);
         bool RestaurantExists(int restaurantId);
+        bool CreateRestaurant(Restaurant restaurant);
+        bool Save();
     }
 }

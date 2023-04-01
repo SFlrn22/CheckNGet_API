@@ -10,5 +10,7 @@ namespace CheckNGet.Interface
         ICollection<Order> GetOrdersByUser(int userId);
         bool UserExists(int userId);
         bool UserExists(string username);
+        bool CreateUser(User user);
+        bool Save();
     }
 }

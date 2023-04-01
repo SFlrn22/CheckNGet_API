@@ -8,5 +8,7 @@ namespace CheckNGet.Interface
         Category GetCategory(int id);
         ICollection<Dish> GetDishByCategory(int categoryId);
         bool CategoryExists(int id);
+        bool CreateCategory(Category category);
+        bool Save();
     }
 }

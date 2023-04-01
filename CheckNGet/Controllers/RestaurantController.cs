@@ -2,6 +2,7 @@
 using CheckNGet.Interface;
 using CheckNGet.Models;
 using CheckNGet.Models.DTO;
+using CheckNGet.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CheckNGet.Controllers
@@ -43,6 +44,19 @@ namespace CheckNGet.Controllers
                 return BadRequest(ModelState);
 
             return Ok(restaurant);
+        }
+
+        [HttpGet("{restaurantId}/dish")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Dish>))]
+        [ProducesResponseType(400)]
+        public IActionResult GetDishByRestaurant(int restaurantId)
+        {
+            var items = _mapper.Map<List<DishDTO>>(_restaurantRepository.GetDishByRestaurant(restaurantId));
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            return Ok(items);
         }
 
         [HttpPost]

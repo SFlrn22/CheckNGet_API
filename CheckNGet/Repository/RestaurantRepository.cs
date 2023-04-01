@@ -20,6 +20,11 @@ namespace CheckNGet.Repository
             return Save();
         }
 
+        public ICollection<Dish> GetDishByRestaurant(int restaurantId)
+        {
+            return _context.RestaurantDishes.Where(r => r.RestaurantId == restaurantId).Select(d => d.Dish).ToList();
+        }
+
         public Restaurant GetRestaurant(int id)
         {
             return _context.Restaurants.Where(r => r.Id == id).FirstOrDefault();

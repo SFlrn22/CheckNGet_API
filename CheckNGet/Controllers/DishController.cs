@@ -76,7 +76,34 @@ namespace CheckNGet.Controllers
             }
 
             return Ok("Successfully created!");
+        }
+        [HttpPut("{dishId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateCategory(int dishId, [FromQuery] int restaurantId, [FromQuery] int categoryId, [FromBody] DishDTO updateDish)
+        {
+            if (updateDish == null)
+                return BadRequest(ModelState);
 
+            if (dishId != updateDish.Id)
+                return BadRequest(ModelState);
+
+            if (!_dishRepository.DishExists(dishId))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var dishMap = _mapper.Map<Dish>(updateDish);
+
+            if (!_dishRepository.UpdateDish(restaurantId, categoryId, dishMap))
+            {
+                ModelState.AddModelError("", "Something went wrong updating dish!");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
         }
     }
 }

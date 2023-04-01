@@ -9,6 +9,7 @@ namespace CheckNGet.Interface
         Dish GetDishByName(string name);
         bool DishExists(int id);  
         bool CreateDish(int restaurantId, int categoryId, Dish dish);
+        bool UpdateDish(int restaurantId, int categoryId, Dish dish);
         bool Save();
     }
 }

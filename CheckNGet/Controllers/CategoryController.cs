@@ -60,7 +60,7 @@ namespace CheckNGet.Controllers
             return Ok(items);
         }
         [HttpPost]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public IActionResult CreateCategory([FromBody] CategoryDTO categoryCreate)
         {

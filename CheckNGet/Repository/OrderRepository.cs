@@ -13,6 +13,24 @@ namespace CheckNGet.Repository
         {
             _context = context;
         }
+
+        public bool CreateOrder(int dishId, Order order)
+        {
+            var dish = _context.Dishes.Where(d => d.Id == dishId).FirstOrDefault();
+
+            var orderDish = new OrderDish()
+            {
+                Order = order,
+                Dish = dish
+            };
+
+            _context.Add(orderDish);
+
+            _context.Add(order);
+
+            return Save();
+        }
+
         public ICollection<Dish> GetDishesFromOrder(int orderId)
         {
             return _context.OrderDishes.Where(od => od.OrderId == orderId).Select(d => d.Dish).ToList();
@@ -36,6 +54,12 @@ namespace CheckNGet.Repository
         public bool OrderExists(int orderId)
         {
             return _context.Orders.Any(o => o.Id == orderId);
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
         }
     }
 }

@@ -2,6 +2,7 @@
 using CheckNGet.Interface;
 using CheckNGet.Models;
 using CheckNGet.Models.DTO;
+using CheckNGet.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CheckNGet.Controllers
@@ -11,11 +12,13 @@ namespace CheckNGet.Controllers
     public class OrderController : Controller
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public OrderController(IOrderRepository orderRepository, IMapper mapper)
+        public OrderController(IOrderRepository orderRepository, IUserRepository userRepository, IMapper mapper)
         {
             _orderRepository = orderRepository;
+            _userRepository = userRepository;
             _mapper = mapper;
         }
         [HttpGet]
@@ -73,6 +76,40 @@ namespace CheckNGet.Controllers
                 return BadRequest(ModelState);
 
             return Ok(user);
+        }
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateUser([FromQuery] int userId, [FromQuery] int dishId, [FromBody] OrderDTO orderCreate)
+        {
+            if (orderCreate == null)
+                return BadRequest(ModelState);
+
+            var order = _orderRepository.GetOrders()
+                .Where(o => o.OrderCode.Trim().ToUpper() == orderCreate.OrderCode.TrimEnd().ToUpper())
+                .FirstOrDefault();
+
+            if (order != null)
+            {
+                ModelState.AddModelError("", "Order already exists!");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var orderMap = _mapper.Map<Order>(orderCreate);
+
+            orderMap.User = _userRepository.GetUser(userId);
+
+            if (!_orderRepository.CreateOrder(dishId, orderMap))
+            {
+                ModelState.AddModelError("", "Something went wrong with saving!");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Successfully created!");
+
         }
     }
 }

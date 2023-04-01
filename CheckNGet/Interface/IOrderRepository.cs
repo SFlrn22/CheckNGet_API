@@ -9,5 +9,7 @@ namespace CheckNGet.Interface
         User GetUserFromOrder(int orderId);
         ICollection<Dish> GetDishesFromOrder(int orderId);
         bool OrderExists(int orderId);
+        bool CreateOrder(int dishId, Order order);
+        bool Save();
     }
 }

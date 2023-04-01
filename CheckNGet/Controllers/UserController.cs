@@ -72,7 +72,7 @@ namespace CheckNGet.Controllers
             return Ok(orders);
         }
         [HttpPost]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public IActionResult CreateUser([FromBody] UserDTO userCreate)
         {

@@ -61,5 +61,11 @@ namespace CheckNGet.Repository
             var saved = _context.SaveChanges();
             return saved > 0 ? true : false;
         }
+
+        public bool UpdateOrder(int dishId, Order order)
+        {
+            _context.Update(order);
+            return Save();
+        }
     }
 }

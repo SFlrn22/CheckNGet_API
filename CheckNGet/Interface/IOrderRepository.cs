@@ -10,6 +10,7 @@ namespace CheckNGet.Interface
         ICollection<Dish> GetDishesFromOrder(int orderId);
         bool OrderExists(int orderId);
         bool CreateOrder(int dishId, Order order);
+        bool UpdateOrder(int dishId, Order order);
         bool Save();
     }
 }

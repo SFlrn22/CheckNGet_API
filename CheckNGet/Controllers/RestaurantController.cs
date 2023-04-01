@@ -90,5 +90,33 @@ namespace CheckNGet.Controllers
 
             return Ok("Successfully created!");
         }
+        [HttpPut("{restaurantId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateRestaurant(int restaurantId, [FromBody] RestaurantDTO updateRestaurant)
+        {
+            if (updateRestaurant == null)
+                return BadRequest(ModelState);
+
+            if (restaurantId != updateRestaurant.Id)
+                return BadRequest(ModelState);
+
+            if (!_restaurantRepository.RestaurantExists(restaurantId))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var restaurantMap = _mapper.Map<Restaurant>(updateRestaurant);
+
+            if (!_restaurantRepository.UpdateRestaurant(restaurantMap))
+            {
+                ModelState.AddModelError("", "Something went wrong updating restaurant!");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+        }
     }
 }

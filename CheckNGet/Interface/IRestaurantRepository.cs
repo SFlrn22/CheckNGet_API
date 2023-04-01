@@ -10,6 +10,7 @@ namespace CheckNGet.Interface
         ICollection<Dish> GetDishByRestaurant(int restaurantId);
         bool RestaurantExists(int restaurantId);
         bool CreateRestaurant(Restaurant restaurant);
+        bool UpdateRestaurant(Restaurant restaurant);
         bool Save();
     }
 }

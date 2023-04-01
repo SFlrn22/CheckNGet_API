@@ -1,5 +1,9 @@
-﻿namespace CheckNGet.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace CheckNGet.Models
 {
+    [Index(nameof(Email), IsUnique = true)]
+    [Index(nameof(UserName), IsUnique = true)]
     public class User
     {
         public int Id { get; set; }

@@ -46,10 +46,11 @@ namespace CheckNGet.Controllers
 
             return Ok(category);
         }
-        [HttpGet("dish/{categoryId}")]
+
+        [HttpGet("{categoryId}/dish")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Dish>))]
         [ProducesResponseType(400)]
-        public IActionResult GetItemByCategoryId(int categoryId)
+        public IActionResult GetDishByCategoryId(int categoryId)
         {
             var items = _mapper.Map<List<DishDTO>>(_categoryRepository.GetDishByCategory(categoryId));
 

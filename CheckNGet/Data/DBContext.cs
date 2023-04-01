@@ -20,25 +20,25 @@ namespace CheckNGet.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CategoryDish>()
-                .HasKey(ci => new { ci.CategoryId, ci.DishId } );
+                .HasKey(cd => new { cd.CategoryId, cd.DishId } );
             modelBuilder.Entity<CategoryDish>()
                 .HasOne(c => c.Category)
-                .WithMany(ci => ci.CategoryDishes)
+                .WithMany(cd => cd.CategoryDishes)
                 .HasForeignKey(c => c.CategoryId);
             modelBuilder.Entity<CategoryDish>()
                 .HasOne(d => d.Dish)
-                .WithMany(ci => ci.CategoryDishes)
+                .WithMany(cd => cd.CategoryDishes)
                 .HasForeignKey(d => d.DishId);
 
             modelBuilder.Entity<OrderDish>()
-                .HasKey(oi => new { oi.OrderId, oi.DishId } );
+                .HasKey(od => new { od.OrderId, od.DishId } );
             modelBuilder.Entity<OrderDish>()
                 .HasOne(o => o.Order)
-                .WithMany(oi => oi.OrderDishes)
+                .WithMany(od => od.OrderDishes)
                 .HasForeignKey(o => o.OrderId);
             modelBuilder.Entity<OrderDish>()
                 .HasOne(d => d.Dish)
-                .WithMany(oi => oi.OrderDishes)
+                .WithMany(od => od.OrderDishes)
                 .HasForeignKey(d => d.DishId);
 
             modelBuilder.Entity<RestaurantDish>()

@@ -1,5 +1,9 @@
-﻿namespace CheckNGet.Models
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+
+namespace CheckNGet.Models
 {
+    [Index(nameof(OrderCode), IsUnique = true)]
     public class Order
     {
         public int Id { get; set; }

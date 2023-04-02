@@ -105,5 +105,26 @@ namespace CheckNGet.Controllers
 
             return NoContent();
         }
+        [HttpDelete("{dishId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteDish(int dishId)
+        {
+            if (!_dishRepository.DishExists(dishId))
+                return NotFound();
+
+            var dishToDelete = _dishRepository.GetDish(dishId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_dishRepository.DeleteDish(dishToDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong deleting dish");
+            }
+
+            return NoContent();
+        }
     }
 }

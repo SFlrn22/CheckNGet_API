@@ -10,7 +10,7 @@ namespace CheckNGet.Interface
         bool DishExists(int id);  
         bool CreateDish(int restaurantId, int categoryId, Dish dish);
         bool UpdateDish(int restaurantId, int categoryId, Dish dish);
-        bool DeleteDish(int id);
+        bool DeleteDish(Dish dish);
         bool DeleteDishes(List<Dish> dishes);
         bool Save();
     }

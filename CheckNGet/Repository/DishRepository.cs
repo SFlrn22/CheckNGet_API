@@ -39,9 +39,9 @@ namespace CheckNGet.Repository
             return Save();
         }
 
-        public bool DeleteDish(int id)
+        public bool DeleteDish(Dish dish)
         {
-            _context.Remove(id);
+            _context.Remove(dish);
             return Save();
         }
 

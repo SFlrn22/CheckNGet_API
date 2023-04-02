@@ -137,7 +137,7 @@ namespace CheckNGet.Controllers
 
             if (!_dishRepository.DeleteDishes(dishesToDelete.ToList()));
             {
-                ModelState.AddModelError("", "Something went wrong deleting restaurant");
+                ModelState.AddModelError("", "Something went wrong deleting dishes tied to restaurant");
             }
 
             if (!_restaurantRepository.DeleteRestaurant(restaurantToDelete))

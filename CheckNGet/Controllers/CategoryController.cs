@@ -12,11 +12,13 @@ namespace CheckNGet.Controllers
     public class CategoryController : Controller
     {
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IDishRepository _dishRepository;
         private readonly IMapper _mapper;
 
-        public CategoryController(ICategoryRepository categoryRepository, IMapper mapper)
+        public CategoryController(ICategoryRepository categoryRepository, IDishRepository dishRepository, IMapper mapper)
         {
             _categoryRepository = categoryRepository;
+            _dishRepository = dishRepository;
             _mapper = mapper;
         }
 
@@ -128,10 +130,16 @@ namespace CheckNGet.Controllers
             if (!_categoryRepository.CategoryExists(categoryId))
                 return NotFound();
 
+            var dishesToDelete = _categoryRepository.GetDishByCategory(categoryId);
             var categoryToDelete = _categoryRepository.GetCategory(categoryId);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            if (!_dishRepository.DeleteDishes(dishesToDelete.ToList()));
+            {
+                ModelState.AddModelError("", "Something went wrong deleting dishes tied to category");
+            }
 
             if (!_categoryRepository.DeleteCategory(categoryToDelete))
             {

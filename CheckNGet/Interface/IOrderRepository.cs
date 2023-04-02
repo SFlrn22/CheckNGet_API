@@ -11,6 +11,7 @@ namespace CheckNGet.Interface
         bool OrderExists(int orderId);
         bool CreateOrder(int dishId, Order order);
         bool UpdateOrder(int dishId, Order order);
+        bool DeleteOrder(Order order);
         bool Save();
     }
 }

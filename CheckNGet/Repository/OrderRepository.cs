@@ -31,6 +31,12 @@ namespace CheckNGet.Repository
             return Save();
         }
 
+        public bool DeleteOrder(Order order)
+        {
+            _context.Remove(order);
+            return Save();
+        }
+
         public ICollection<Dish> GetDishesFromOrder(int orderId)
         {
             return _context.OrderDishes.Where(od => od.OrderId == orderId).Select(d => d.Dish).ToList();

@@ -136,7 +136,6 @@ namespace CheckNGet.Controllers
             if (!_categoryRepository.DeleteCategory(categoryToDelete))
             {
                 ModelState.AddModelError("", "Something went wrong deleting category");
-                return StatusCode(500, ModelState);
             }
 
             return NoContent();

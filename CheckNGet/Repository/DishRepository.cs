@@ -39,6 +39,18 @@ namespace CheckNGet.Repository
             return Save();
         }
 
+        public bool DeleteDish(int id)
+        {
+            _context.Remove(id);
+            return Save();
+        }
+
+        public bool DeleteDishes(List<Dish> dishes)
+        {
+            _context.RemoveRange(dishes);
+            return Save();
+        }
+
         public bool DishExists(int id)
         {
             return _context.Dishes.Any(fi => fi.Id == id);

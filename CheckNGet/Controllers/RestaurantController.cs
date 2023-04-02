@@ -12,10 +12,12 @@ namespace CheckNGet.Controllers
     public class RestaurantController : Controller
     {
         private readonly IRestaurantRepository _restaurantRepository;
+        private readonly IDishRepository _dishRepository;
         private readonly IMapper _mapper;
-        public RestaurantController(IRestaurantRepository restaurantRepository, IMapper mapper)
+        public RestaurantController(IRestaurantRepository restaurantRepository,IDishRepository dishRepository, IMapper mapper)
         {
             _restaurantRepository = restaurantRepository;
+            _dishRepository = dishRepository;
             _mapper = mapper;
         }
         [HttpGet]
@@ -127,15 +129,20 @@ namespace CheckNGet.Controllers
             if (!_restaurantRepository.RestaurantExists(restaurantId))
                 return NotFound();
 
+            var dishesToDelete = _restaurantRepository.GetDishByRestaurant(restaurantId);
             var restaurantToDelete = _restaurantRepository.GetRestaurant(restaurantId);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            if (!_dishRepository.DeleteDishes(dishesToDelete.ToList()));
+            {
+                ModelState.AddModelError("", "Something went wrong deleting restaurant");
+            }
+
             if (!_restaurantRepository.DeleteRestaurant(restaurantToDelete))
             {
                 ModelState.AddModelError("", "Something went wrong deleting restaurant");
-                return StatusCode(500, ModelState);
             }
 
             return NoContent();

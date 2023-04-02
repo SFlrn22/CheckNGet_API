@@ -148,7 +148,6 @@ namespace CheckNGet.Controllers
             if (!_userRepository.DeleteUser(userToDelete))
             {
                 ModelState.AddModelError("", "Something went wrong deleting user");
-                return StatusCode(500, ModelState);
             }
 
             return NoContent();

@@ -3,7 +3,10 @@ using CheckNGet.Interface;
 using CheckNGet.Models;
 using CheckNGet.Models.DTO;
 using CheckNGet.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace CheckNGet.Controllers
 {
@@ -25,6 +28,7 @@ namespace CheckNGet.Controllers
         }
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Order>))]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult GetOrders()
         {
             var orders = _mapper.Map<List<OrderDTO>>(_orderRepository.GetOrders());
@@ -37,6 +41,7 @@ namespace CheckNGet.Controllers
         [HttpGet("{orderId}")]
         [ProducesResponseType(200, Type = typeof(Order))]
         [ProducesResponseType(400)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult GetOrder(int orderId)
         {
             if (!_orderRepository.OrderExists(orderId))
@@ -52,6 +57,7 @@ namespace CheckNGet.Controllers
         [HttpGet("{orderId}/user")]
         [ProducesResponseType(200, Type = typeof(User))]
         [ProducesResponseType(400)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult GetUserFromOrder(int orderId) 
         {
             if(!_orderRepository.OrderExists(orderId))
@@ -67,6 +73,7 @@ namespace CheckNGet.Controllers
         [HttpGet("{orderId}/dish")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Dish>))]
         [ProducesResponseType(400)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult GetDishesFromOrder(int orderId)
         {
             if (!_orderRepository.OrderExists(orderId))
@@ -82,6 +89,7 @@ namespace CheckNGet.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult CreateOrder([FromQuery] int userId, [FromQuery] int dishId, [FromBody] OrderDTO orderCreate)
         {
             if (orderCreate == null)
@@ -116,7 +124,8 @@ namespace CheckNGet.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateCategory(int orderId, [FromQuery] int dishId, [FromBody] OrderDTO updateOrder)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        public IActionResult UpdateOrder(int orderId, [FromQuery] int dishId, [FromBody] OrderDTO updateOrder)
         {
             if (updateOrder == null)
                 return BadRequest(ModelState);
@@ -144,6 +153,7 @@ namespace CheckNGet.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult DeleteOrder(int orderId)
         {
             if (!_orderRepository.OrderExists(orderId))

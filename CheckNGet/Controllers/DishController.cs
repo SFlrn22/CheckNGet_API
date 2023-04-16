@@ -4,6 +4,9 @@ using CheckNGet.Models.DTO;
 using CheckNGet.Models;
 using CheckNGet.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace CheckNGet.Controllers
 {
@@ -21,6 +24,7 @@ namespace CheckNGet.Controllers
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Dish>))]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, User")]
         public IActionResult GetDishes()
         {
             var dishes = _mapper.Map<List<DishDTO>>(_dishRepository.GetDishes());
@@ -34,6 +38,7 @@ namespace CheckNGet.Controllers
         [HttpGet("{dishId}")]
         [ProducesResponseType(200, Type = typeof(Dish))]
         [ProducesResponseType(400)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, User")]
         public IActionResult GetDish(int dishId)
         {
             if (!_dishRepository.DishExists(dishId))
@@ -49,6 +54,7 @@ namespace CheckNGet.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult CreateDish([FromQuery] int restaurantId, [FromQuery] int categoryId, [FromBody] DishDTO dishCreate)
         {
             if (dishCreate == null)
@@ -81,7 +87,8 @@ namespace CheckNGet.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateCategory(int dishId, [FromQuery] int restaurantId, [FromQuery] int categoryId, [FromBody] DishDTO updateDish)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        public IActionResult UpdateDish(int dishId, [FromQuery] int restaurantId, [FromQuery] int categoryId, [FromBody] DishDTO updateDish)
         {
             if (updateDish == null)
                 return BadRequest(ModelState);
@@ -109,6 +116,7 @@ namespace CheckNGet.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult DeleteDish(int dishId)
         {
             if (!_dishRepository.DishExists(dishId))

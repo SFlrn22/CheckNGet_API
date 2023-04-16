@@ -3,6 +3,8 @@ using CheckNGet.Interface;
 using CheckNGet.Models;
 using CheckNGet.Models.DTO;
 using CheckNGet.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CheckNGet.Controllers
@@ -20,6 +22,7 @@ namespace CheckNGet.Controllers
         }
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<User>))]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult GetUsers()
         {
             var users = _mapper.Map<List<UserDTO>>(_userRepository.GetUsers());
@@ -32,6 +35,7 @@ namespace CheckNGet.Controllers
         [HttpGet("{userId}")]
         [ProducesResponseType(200, Type = typeof(User))]
         [ProducesResponseType(400)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult GetUser(int userId)
         {
             if (!_userRepository.UserExists(userId))
@@ -47,6 +51,7 @@ namespace CheckNGet.Controllers
         [HttpGet("userName")]
         [ProducesResponseType(200, Type = typeof(User))]
         [ProducesResponseType(400)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult GetUser(string userName)
         {
             if (!_userRepository.UserExists(userName))
@@ -62,6 +67,7 @@ namespace CheckNGet.Controllers
         [HttpGet("{userId}/order")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Order>))]
         [ProducesResponseType(400)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,User")]
         public IActionResult GetOrdersByUser(int userId)
         {
             var orders = _mapper.Map<List<OrderDTO>>(_userRepository.GetOrdersByUser(userId));
@@ -74,6 +80,7 @@ namespace CheckNGet.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult CreateUser([FromBody] UserDTO userCreate)
         {
             if (userCreate == null)
@@ -107,6 +114,7 @@ namespace CheckNGet.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult UpdateUser(int userId, [FromBody] UserDTO updateUser)
         {
             if (updateUser == null)
@@ -135,6 +143,7 @@ namespace CheckNGet.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult DeleteUser(int userId)
         {
             if (!_userRepository.UserExists(userId))

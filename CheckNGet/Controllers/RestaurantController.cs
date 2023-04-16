@@ -3,7 +3,10 @@ using CheckNGet.Interface;
 using CheckNGet.Models;
 using CheckNGet.Models.DTO;
 using CheckNGet.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace CheckNGet.Controllers
 {
@@ -22,6 +25,7 @@ namespace CheckNGet.Controllers
         }
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Restaurant>))]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,User")]
         public IActionResult GetRestaurants()
         {
             var restaurants = _mapper.Map<List<RestaurantDTO>>(_restaurantRepository.GetRestaurants());
@@ -35,6 +39,7 @@ namespace CheckNGet.Controllers
         [HttpGet("{restaurantId}")]
         [ProducesResponseType(200, Type = typeof(Restaurant))]
         [ProducesResponseType(400)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,User")]
         public IActionResult GetRestaurant(int restaurantId)
         {
             if (!_restaurantRepository.RestaurantExists(restaurantId))
@@ -51,6 +56,7 @@ namespace CheckNGet.Controllers
         [HttpGet("{restaurantId}/dish")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Dish>))]
         [ProducesResponseType(400)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,User")]
         public IActionResult GetDishByRestaurant(int restaurantId)
         {
             var items = _mapper.Map<List<DishDTO>>(_restaurantRepository.GetDishByRestaurant(restaurantId));
@@ -64,6 +70,7 @@ namespace CheckNGet.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult CreateRestaurant([FromBody] RestaurantDTO restaurantCreate)
         {
             if (restaurantCreate == null)
@@ -96,6 +103,7 @@ namespace CheckNGet.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult UpdateRestaurant(int restaurantId, [FromBody] RestaurantDTO updateRestaurant)
         {
             if (updateRestaurant == null)
@@ -124,6 +132,7 @@ namespace CheckNGet.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult DeleteRestaurant(int restaurantId)
         {
             if (!_restaurantRepository.RestaurantExists(restaurantId))

@@ -4,6 +4,9 @@ using CheckNGet.Models.DTO;
 using CheckNGet.Models;
 using CheckNGet.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace CheckNGet.Controllers
 {
@@ -24,6 +27,7 @@ namespace CheckNGet.Controllers
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Category>))]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, User")]
         public IActionResult GetCategories()
         {
             var categories = _mapper.Map<List<CategoryDTO>>(_categoryRepository.GetCategories());
@@ -36,6 +40,7 @@ namespace CheckNGet.Controllers
         [HttpGet("{categoryId}")]
         [ProducesResponseType(200, Type = typeof(Category))]
         [ProducesResponseType(400)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, User")]
         public IActionResult GetCategory(int categoryId)
         {
             if (!_categoryRepository.CategoryExists(categoryId))
@@ -52,6 +57,7 @@ namespace CheckNGet.Controllers
         [HttpGet("{categoryId}/dish")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Dish>))]
         [ProducesResponseType(400)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,User")]
         public IActionResult GetDishByCategoryId(int categoryId)
         {
             var items = _mapper.Map<List<DishDTO>>(_categoryRepository.GetDishByCategory(categoryId));
@@ -64,6 +70,7 @@ namespace CheckNGet.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult CreateCategory([FromBody] CategoryDTO categoryCreate)
         {
             if (categoryCreate == null)
@@ -97,6 +104,7 @@ namespace CheckNGet.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult UpdateCategory(int categoryId, [FromBody] CategoryDTO updateCategory)
         {
             if (updateCategory == null)
@@ -125,6 +133,7 @@ namespace CheckNGet.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult DeleteCategory(int categoryId)
         {
             if (!_categoryRepository.CategoryExists(categoryId))

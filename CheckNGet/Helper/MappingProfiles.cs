@@ -16,6 +16,7 @@ namespace CheckNGet.Helper
             CreateMap<DishDTO, Dish>();
             CreateMap<User, UserDTO>();
             CreateMap<UserDTO, User>();
+            CreateMap<UserCreateDTO, User>();
             CreateMap<Order, OrderDTO>();
             CreateMap<OrderDTO, Order>();
         }

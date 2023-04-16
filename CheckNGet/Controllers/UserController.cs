@@ -81,7 +81,7 @@ namespace CheckNGet.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
-        public IActionResult CreateUser([FromBody] UserDTO userCreate)
+        public IActionResult CreateUser([FromBody] UserCreateDTO userCreate)
         {
             if (userCreate == null)
                 return BadRequest(ModelState);

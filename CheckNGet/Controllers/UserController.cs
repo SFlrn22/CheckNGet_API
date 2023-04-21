@@ -123,15 +123,21 @@ namespace CheckNGet.Controllers
             if (userId != updateUser.Id)
                 return BadRequest(ModelState);
 
-            if (!_userRepository.UserExists(userId))
+            var userToBeUpdated = _userRepository.GetUser(userId);
+
+            if (userToBeUpdated == null)
                 return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var userMap = _mapper.Map<User>(updateUser);
+            userToBeUpdated.FirstName = updateUser.FirstName;
+            userToBeUpdated.LastName = updateUser.LastName;
+            userToBeUpdated.UserName = updateUser.UserName;
+            userToBeUpdated.Email = updateUser.Email;
+            userToBeUpdated.Password = updateUser.Password;
 
-            if (!_userRepository.UpdateUser(userMap))
+            if (!_userRepository.UpdateUser(userToBeUpdated))
             {
                 ModelState.AddModelError("", "Something went wrong updating user!");
                 return StatusCode(500, ModelState);

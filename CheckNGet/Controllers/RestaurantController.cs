@@ -76,9 +76,7 @@ namespace CheckNGet.Controllers
             if (restaurantCreate == null)
                 return BadRequest(ModelState);
 
-            var restaurant = _restaurantRepository.GetRestaurants()
-                .Where(r => r.RestaurantName.Trim().ToUpper() == restaurantCreate.RestaurantName.TrimEnd().ToUpper())
-                .FirstOrDefault();
+            var restaurant = _restaurantRepository.CompareRestaurants(restaurantCreate);
 
             if (restaurant != null)
             {

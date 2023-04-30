@@ -2,6 +2,7 @@
 using CheckNGet.Data;
 using CheckNGet.Interface;
 using CheckNGet.Models;
+using CheckNGet.Models.DTO;
 
 namespace CheckNGet.Repository
 {
@@ -44,6 +45,12 @@ namespace CheckNGet.Repository
         public ICollection<Restaurant> GetRestaurants()
         {
             return _context.Restaurants.OrderBy(r => r.Id).ToList();
+        }
+
+        public Restaurant CompareRestaurants(RestaurantDTO restaurantCreate)
+        {
+            return GetRestaurants().Where(r => r.RestaurantName.Trim().ToUpper() == restaurantCreate.RestaurantName.TrimEnd().ToUpper())
+                .FirstOrDefault();
         }
 
         public bool RestaurantExists(int restaurantId)

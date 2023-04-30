@@ -109,5 +109,45 @@ namespace CheckNGet.Test.Controller
             result.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);
             result.Should().BeOfType<OkObjectResult>().Which.Value.Should().Be("Successfully created!");
         }
+        [Fact]
+        public void UserController_UpdateUser_ReturnNoContent()
+        {
+            var user = A.Fake<User>();
+            var userId = user.Id;
+            var userToBeUpdated = A.Fake<User>();
+            var updateUser = A.Fake<UserDTO>();
+
+            A.CallTo(() => _userRepository.GetUser(userId)).Returns(userToBeUpdated);
+            A.CallTo(() => _userRepository.UpdateUser(userToBeUpdated)).Returns(true);
+
+            var controller = new UserController(_userRepository, _mapper);
+
+            var result = controller.UpdateUser(userId, updateUser);
+
+            A.CallTo(() => _userRepository.GetUser(userId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _userRepository.UpdateUser(userToBeUpdated)).MustHaveHappenedOnceExactly();
+
+            result.Should().NotBeNull();
+            result.Should().BeOfType(typeof(NoContentResult));
+        }
+        public void UserController_DeleteUser_ReturnNoContent()
+        {
+            var user = A.Fake<User>();
+            var userId = user.Id;
+            var userToDelete = A.Fake<User>();
+
+            A.CallTo(() => _userRepository.GetUser(userId)).Returns(userToDelete);
+            A.CallTo(() => _userRepository.DeleteUser(userToDelete)).Returns(true);
+
+            var controller = new UserController(_userRepository, _mapper);
+
+            var result = controller.DeleteUser(userId);
+
+            A.CallTo(() => _userRepository.GetUser(userId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _userRepository.DeleteUser(userToDelete)).MustHaveHappenedOnceExactly();
+
+            result.Should().NotBeNull();
+            result.Should().BeOfType(typeof(NoContentResult));
+        }
     }
 }

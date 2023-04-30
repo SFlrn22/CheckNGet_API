@@ -94,7 +94,6 @@ namespace CheckNGet.Test.Controller
         public void UserController_CreateUser_ReturnOk()
         {
             var userCreate = A.Fake<UserCreateDTO>();
-            var user = A.Fake<User>();
             var userMap = A.Fake<User>();
 
             A.CallTo(() => _userRepository.CompareUsers(userCreate)).Returns(null);
@@ -117,6 +116,7 @@ namespace CheckNGet.Test.Controller
             var userToBeUpdated = A.Fake<User>();
             var updateUser = A.Fake<UserDTO>();
 
+            A.CallTo(() => _userRepository.UserExists(userId)).Returns(true);
             A.CallTo(() => _userRepository.GetUser(userId)).Returns(userToBeUpdated);
             A.CallTo(() => _userRepository.UpdateUser(userToBeUpdated)).Returns(true);
 
@@ -130,12 +130,14 @@ namespace CheckNGet.Test.Controller
             result.Should().NotBeNull();
             result.Should().BeOfType(typeof(NoContentResult));
         }
+        [Fact]
         public void UserController_DeleteUser_ReturnNoContent()
         {
             var user = A.Fake<User>();
             var userId = user.Id;
             var userToDelete = A.Fake<User>();
 
+            A.CallTo(() => _userRepository.UserExists(userId)).Returns(true);
             A.CallTo(() => _userRepository.GetUser(userId)).Returns(userToDelete);
             A.CallTo(() => _userRepository.DeleteUser(userToDelete)).Returns(true);
 

@@ -59,6 +59,9 @@ namespace CheckNGet.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,User")]
         public IActionResult GetDishByRestaurant(int restaurantId)
         {
+            if (!_restaurantRepository.RestaurantExists(restaurantId))
+                return NotFound();
+
             var items = _mapper.Map<List<DishDTO>>(_restaurantRepository.GetDishByRestaurant(restaurantId));
 
             if (!ModelState.IsValid)

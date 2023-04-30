@@ -121,6 +121,9 @@ namespace CheckNGet.Controllers
             if (userId != updateUser.Id)
                 return BadRequest(ModelState);
 
+            if (!_userRepository.UserExists(userId))
+                return NotFound();
+
             var userToBeUpdated = _userRepository.GetUser(userId);
 
             if (userToBeUpdated == null)

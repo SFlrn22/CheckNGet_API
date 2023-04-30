@@ -60,9 +60,7 @@ namespace CheckNGet.Controllers
             if (dishCreate == null)
                 return BadRequest(ModelState);
 
-            var dish = _dishRepository.GetDishes()
-                .Where(d=> d.Name.Trim().ToUpper() == dishCreate.Name.TrimEnd().ToUpper())
-                .FirstOrDefault();
+            var dish = _dishRepository.CompareDishes(dishCreate);
 
             if (dish != null)
             {

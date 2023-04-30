@@ -2,6 +2,7 @@
 using CheckNGet.Data;
 using CheckNGet.Interface;
 using CheckNGet.Models;
+using CheckNGet.Models.DTO;
 
 namespace CheckNGet.Repository
 {
@@ -69,6 +70,13 @@ namespace CheckNGet.Repository
         public ICollection<Dish> GetDishes()
         {
             return _context.Dishes.OrderBy(fi => fi.Id).ToList();
+        }
+
+        public Dish CompareDishes(DishDTO dishCreate)
+        {
+            return GetDishes()
+                .Where(d => d.Name.Trim().ToUpper() == dishCreate.Name.TrimEnd().ToUpper())
+                .FirstOrDefault();
         }
 
         public bool Save()

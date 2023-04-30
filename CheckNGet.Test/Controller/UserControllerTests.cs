@@ -90,5 +90,24 @@ namespace CheckNGet.Test.Controller
             result.Should().NotBeNull();
             result.Should().BeOfType(typeof(OkObjectResult));
         }
+        [Fact]
+        public void UserController_CreateUser_ReturnOk()
+        {
+            var userCreate = A.Fake<UserCreateDTO>();
+            var user = A.Fake<User>();
+            var userMap = A.Fake<User>();
+
+            A.CallTo(() => _userRepository.CompareUsers(userCreate)).Returns(null);
+            A.CallTo(() => _mapper.Map<User>(userCreate)).Returns(userMap);
+            A.CallTo(() => _userRepository.CreateUser(userMap)).Returns(true);
+
+            var controller = new UserController(_userRepository, _mapper);
+
+            var result = controller.CreateUser(userCreate);
+
+            result.Should().NotBeNull();
+            result.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);
+            result.Should().BeOfType<OkObjectResult>().Which.Value.Should().Be("Successfully created!");
+        }
     }
 }

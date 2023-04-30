@@ -1,4 +1,5 @@
 ﻿using CheckNGet.Models;
+using CheckNGet.Models.DTO;
 
 namespace CheckNGet.Interface
 {
@@ -8,6 +9,7 @@ namespace CheckNGet.Interface
         User GetUser(int id);
         User GetUser(string username);
         ICollection<Order> GetOrdersByUser(int userId);
+        User CompareUsers(UserCreateDTO userCreate);
         bool UserExists(int userId);
         bool UserExists(string username);
         bool CreateUser(User user);

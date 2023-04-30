@@ -86,9 +86,7 @@ namespace CheckNGet.Controllers
             if (userCreate == null)
                 return BadRequest(ModelState);
 
-            var user = _userRepository.GetUsers()
-                .Where(u => u.UserName.Trim().ToUpper() == userCreate.UserName.TrimEnd().ToUpper())
-                .FirstOrDefault();
+            var user = _userRepository.CompareUsers(userCreate);
 
             if (user != null)
             {

@@ -1,6 +1,7 @@
 ﻿using CheckNGet.Data;
 using CheckNGet.Interface;
 using CheckNGet.Models;
+using CheckNGet.Models.DTO;
 
 namespace CheckNGet.Repository
 {
@@ -30,6 +31,11 @@ namespace CheckNGet.Repository
         public ICollection<Order> GetOrdersByUser(int userId)
         {
             return _context.Orders.Where(o => o.User.Id == userId).ToList();
+        }
+        public User CompareUsers(UserCreateDTO userCreate)
+        {
+            return GetUsers().Where(u => u.UserName.Trim().ToUpper() == userCreate.UserName.TrimEnd().ToUpper())
+                .FirstOrDefault();
         }
 
         public bool UserExists(int userId)

@@ -60,6 +60,9 @@ namespace CheckNGet.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,User")]
         public IActionResult GetDishByCategoryId(int categoryId)
         {
+            if (!_categoryRepository.CategoryExists(categoryId))
+                return NotFound();
+
             var items = _mapper.Map<List<DishDTO>>(_categoryRepository.GetDishByCategory(categoryId));
 
             if (!ModelState.IsValid)

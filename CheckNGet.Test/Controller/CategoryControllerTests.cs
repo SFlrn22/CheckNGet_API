@@ -67,6 +67,7 @@ namespace CheckNGet.Test.Controller
             var dishList = A.Fake<List<Dish>>();
             var dishListMapped = A.Fake<List<DishDTO>>();
 
+            A.CallTo(() => _categoryRepository.CategoryExists(categoryId)).Returns(true);
             A.CallTo(() => _categoryRepository.GetDishByCategory(categoryId)).Returns(dishList);
             A.CallTo(() => _mapper.Map<List<DishDTO>>(dishList)).Returns(dishListMapped);
 

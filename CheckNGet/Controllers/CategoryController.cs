@@ -146,7 +146,7 @@ namespace CheckNGet.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (!_dishRepository.DeleteDishes(dishesToDelete.ToList()));
+            if (!_dishRepository.DeleteDishes(dishesToDelete.ToList()))
             {
                 ModelState.AddModelError("", "Something went wrong deleting dishes tied to category");
             }

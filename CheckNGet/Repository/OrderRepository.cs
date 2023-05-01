@@ -1,6 +1,7 @@
 ﻿using CheckNGet.Data;
 using CheckNGet.Interface;
 using CheckNGet.Models;
+using CheckNGet.Models.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace CheckNGet.Repository
@@ -55,6 +56,13 @@ namespace CheckNGet.Repository
         public User GetUserFromOrder(int orderId)
         {
             return _context.Orders.Where(o => o.Id == orderId).Select(u => u.User).FirstOrDefault();
+        }
+
+        public Order CompareOrders(OrderDTO orderCreate)
+        {
+            return GetOrders()
+                .Where(o => o.OrderCode.Trim().ToUpper() == orderCreate.OrderCode.TrimEnd().ToUpper())
+                .FirstOrDefault();
         }
 
         public bool OrderExists(int orderId)

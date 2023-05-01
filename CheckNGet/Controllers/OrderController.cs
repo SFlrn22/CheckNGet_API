@@ -95,9 +95,7 @@ namespace CheckNGet.Controllers
             if (orderCreate == null)
                 return BadRequest(ModelState);
 
-            var order = _orderRepository.GetOrders()
-                .Where(o => o.OrderCode.Trim().ToUpper() == orderCreate.OrderCode.TrimEnd().ToUpper())
-                .FirstOrDefault();
+            var order = _orderRepository.CompareOrders(orderCreate);
 
             if (order != null)
             {

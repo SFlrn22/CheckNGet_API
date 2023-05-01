@@ -1,4 +1,5 @@
 ﻿using CheckNGet.Models;
+using CheckNGet.Models.DTO;
 
 namespace CheckNGet.Interface
 {
@@ -8,6 +9,7 @@ namespace CheckNGet.Interface
         Order GetOrder(int orderId);
         User GetUserFromOrder(int orderId);
         ICollection<Dish> GetDishesFromOrder(int orderId);
+        Order CompareOrders(OrderDTO orderCreate);
         bool OrderExists(int orderId);
         bool CreateOrder(int dishId, Order order);
         bool UpdateOrder(int dishId, Order order);

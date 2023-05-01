@@ -126,13 +126,16 @@ namespace CheckNGet.Test.Controller
             A.CallTo(() => _restaurantRepository.RestaurantExists(restaurantId)).Returns(true);
             A.CallTo(() => _restaurantRepository.GetDishByRestaurant(restaurantId)).Returns(dishesToDelete);
             A.CallTo(() => _restaurantRepository.GetRestaurant(restaurantId)).Returns(restaurantToDelete);
-            A.CallTo(() => _dishRepository.DeleteDishes(dishesToDelete.ToList())).Returns(true);
+            A.CallTo(() => _dishRepository.DeleteDishes(A<List<Dish>>.That.Matches(d => d.SequenceEqual(dishesToDelete)))).Returns(true);
             A.CallTo(() => _restaurantRepository.DeleteRestaurant(restaurantToDelete)).Returns(true);
 
             var controller = new RestaurantController(_restaurantRepository, _dishRepository, _mapper);
 
             var result = controller.DeleteRestaurant(restaurantId);
 
+            A.CallTo(() => _restaurantRepository.GetDishByRestaurant(restaurantId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _restaurantRepository.GetRestaurant(restaurantId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _dishRepository.DeleteDishes(A<List<Dish>>.That.Matches(d => d.SequenceEqual(dishesToDelete)))).MustHaveHappenedOnceExactly();
             A.CallTo(() => _restaurantRepository.DeleteRestaurant(restaurantToDelete)).MustHaveHappenedOnceExactly();
 
             result.Should().NotBeNull();

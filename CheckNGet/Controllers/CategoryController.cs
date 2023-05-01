@@ -76,9 +76,7 @@ namespace CheckNGet.Controllers
             if (categoryCreate == null)
                 return BadRequest(ModelState);
 
-            var category = _categoryRepository.GetCategories()
-                .Where(c => c.Name.Trim().ToUpper() == categoryCreate.Name.TrimEnd().ToUpper())
-                .FirstOrDefault();
+            var category = _categoryRepository.CompareCategories(categoryCreate);
 
             if (category != null)
             {

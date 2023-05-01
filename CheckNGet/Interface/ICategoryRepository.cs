@@ -1,4 +1,5 @@
 ﻿using CheckNGet.Models;
+using CheckNGet.Models.DTO;
 
 namespace CheckNGet.Interface
 {
@@ -7,6 +8,7 @@ namespace CheckNGet.Interface
         ICollection<Category> GetCategories();
         Category GetCategory(int id);
         ICollection<Dish> GetDishByCategory(int categoryId);
+        Category CompareCategories(CategoryDTO categoryCreate);
         bool CategoryExists(int id);
         bool CreateCategory(Category category);
         bool UpdateCategory(Category category);

@@ -1,6 +1,7 @@
 ﻿using CheckNGet.Data;
 using CheckNGet.Interface;
 using CheckNGet.Models;
+using CheckNGet.Models.DTO;
 
 namespace CheckNGet.Repository
 {
@@ -42,6 +43,13 @@ namespace CheckNGet.Repository
         public ICollection<Dish> GetDishByCategory(int categoryId)
         {
             return _context.CategoryDishes.Where(c => c.CategoryId == categoryId).Select(i => i.Dish).ToList();
+        }
+
+        public Category CompareCategories(CategoryDTO categoryCreate)
+        {
+            return GetCategories()
+                .Where(c => c.Name.Trim().ToUpper() == categoryCreate.Name.TrimEnd().ToUpper())
+                .FirstOrDefault();
         }
 
         public bool Save()

@@ -95,6 +95,12 @@ namespace CheckNGet.Controllers
             if (orderCreate == null)
                 return BadRequest(ModelState);
 
+            if (!_userRepository.UserExists(userId))
+                return NotFound("User not found");
+
+            if (!_dishRepository.DishExists(dishId))
+                return NotFound("Dish not found");
+
             var order = _orderRepository.CompareOrders(orderCreate);
 
             if (order != null)

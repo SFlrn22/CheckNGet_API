@@ -99,5 +99,80 @@ namespace CheckNGet.Test.Controller
             result.Should().NotBeNull();
             result.Should().BeOfType(typeof(OkObjectResult));
         }
+        [Fact]
+        public void OrderController_CreateOrder_ReturnOk()
+        {
+            var order = A.Fake<Order>();
+            var user = A.Fake<User>();
+            var userId = user.Id;
+            var dish = A.Fake<Dish>();
+            var dishId = dish.Id;
+            var orderCreate = A.Fake<OrderDTO>();
+
+            A.CallTo(() => _userRepository.UserExists(userId)).Returns(true);
+            A.CallTo(() => _dishRepository.DishExists(dishId)).Returns(true);
+            A.CallTo(() => _orderRepository.CompareOrders(orderCreate)).Returns(null);
+            A.CallTo(() => _mapper.Map<Order>(orderCreate)).Returns(order);
+            A.CallTo(() => _userRepository.GetUser(userId)).Returns(user);
+            A.CallTo(() => _orderRepository.CreateOrder(dishId, order)).Returns(true);
+
+            var controller = new OrderController(_orderRepository, _userRepository, _dishRepository, _mapper);
+
+            var result = controller.CreateOrder(userId, dishId, orderCreate);
+
+            A.CallTo(() => _userRepository.UserExists(userId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _dishRepository.DishExists(dishId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _orderRepository.CompareOrders(orderCreate)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _mapper.Map<Order>(orderCreate)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _userRepository.GetUser(userId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _orderRepository.CreateOrder(dishId, order)).MustHaveHappenedOnceExactly();
+
+            result.Should().NotBeNull();
+            result.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);
+            result.Should().BeOfType<OkObjectResult>().Which.Value.Should().Be("Successfully created!");
+        }
+        [Fact]
+        public void OrderController_UpdateOrder_ReturnNoContent()
+        {
+            var order = A.Fake<Order>();
+            var orderId = order.Id;
+            var dish = A.Fake<Dish>();
+            var dishId = dish.Id;
+            var orderUpdate = A.Fake<OrderDTO>();
+            var orderMapped = A.Fake<Order>();
+
+            A.CallTo(() => _orderRepository.OrderExists(orderId)).Returns(true);
+            A.CallTo(() => _mapper.Map<Order>(orderUpdate)).Returns(orderMapped);
+            A.CallTo(() => _orderRepository.UpdateOrder(dishId, orderMapped)).Returns(true);
+
+            var controller = new OrderController(_orderRepository, _userRepository, _dishRepository, _mapper);
+
+            var result = controller.UpdateOrder(orderId, dishId, orderUpdate);
+
+            A.CallTo(() => _orderRepository.UpdateOrder(dishId, orderMapped)).MustHaveHappenedOnceExactly();
+
+            result.Should().NotBeNull();
+            result.Should().BeOfType(typeof(NoContentResult));
+        }
+        [Fact]
+        public void OrderController_DeleteOrder_ReturnNoContent()
+        {
+            var order = A.Fake<Order>();
+            var orderId = order.Id;
+
+            A.CallTo(() => _orderRepository.OrderExists(orderId)).Returns(true);
+            A.CallTo(() => _orderRepository.GetOrder(orderId)).Returns(order);
+            A.CallTo(() => _orderRepository.DeleteOrder(order)).Returns(true);
+
+            var controller = new OrderController(_orderRepository, _userRepository, _dishRepository, _mapper);
+
+            var result = controller.DeleteOrder(orderId);
+
+            A.CallTo(() => _orderRepository.GetOrder(orderId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _orderRepository.DeleteOrder(order)).MustHaveHappenedOnceExactly();
+
+            result.Should().NotBeNull();
+            result.Should().BeOfType(typeof(NoContentResult));
+        }
     }
 }

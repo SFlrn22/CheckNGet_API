@@ -2,11 +2,9 @@
 using CheckNGet.Interface;
 using CheckNGet.Models;
 using CheckNGet.Models.DTO;
-using CheckNGet.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 
 namespace CheckNGet.Controllers
 {
@@ -17,7 +15,7 @@ namespace CheckNGet.Controllers
         private readonly IRestaurantRepository _restaurantRepository;
         private readonly IDishRepository _dishRepository;
         private readonly IMapper _mapper;
-        public RestaurantController(IRestaurantRepository restaurantRepository,IDishRepository dishRepository, IMapper mapper)
+        public RestaurantController(IRestaurantRepository restaurantRepository, IDishRepository dishRepository, IMapper mapper)
         {
             _restaurantRepository = restaurantRepository;
             _dishRepository = dishRepository;
@@ -39,6 +37,7 @@ namespace CheckNGet.Controllers
         [HttpGet("{restaurantId}")]
         [ProducesResponseType(200, Type = typeof(Restaurant))]
         [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,User")]
         public IActionResult GetRestaurant(int restaurantId)
         {
@@ -47,7 +46,7 @@ namespace CheckNGet.Controllers
 
             var restaurant = _mapper.Map<RestaurantDTO>(_restaurantRepository.GetRestaurant(restaurantId));
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             return Ok(restaurant);
@@ -56,6 +55,7 @@ namespace CheckNGet.Controllers
         [HttpGet("{restaurantId}/dish")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Dish>))]
         [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,User")]
         public IActionResult GetDishByRestaurant(int restaurantId)
         {
@@ -71,8 +71,10 @@ namespace CheckNGet.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(204)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(422)]
+        [ProducesResponseType(500)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult CreateRestaurant([FromBody] RestaurantDTO restaurantCreate)
         {
@@ -104,6 +106,7 @@ namespace CheckNGet.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult UpdateRestaurant(int restaurantId, [FromBody] RestaurantDTO updateRestaurant)
         {
@@ -145,7 +148,7 @@ namespace CheckNGet.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (!_dishRepository.DeleteDishes(dishesToDelete.ToList()));
+            if (!_dishRepository.DeleteDishes(dishesToDelete.ToList()))
             {
                 ModelState.AddModelError("", "Something went wrong deleting dishes tied to restaurant");
             }

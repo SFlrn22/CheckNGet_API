@@ -2,7 +2,6 @@
 using CheckNGet.Interface;
 using CheckNGet.Models;
 using CheckNGet.Models.DTO;
-using CheckNGet.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,12 +21,13 @@ namespace CheckNGet.Controllers
         }
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<User>))]
+        [ProducesResponseType(400)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult GetUsers()
         {
             var users = _mapper.Map<List<UserDTO>>(_userRepository.GetUsers());
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             return Ok(users);
@@ -35,6 +35,7 @@ namespace CheckNGet.Controllers
         [HttpGet("{userId}")]
         [ProducesResponseType(200, Type = typeof(User))]
         [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult GetUser(int userId)
         {
@@ -51,6 +52,7 @@ namespace CheckNGet.Controllers
         [HttpGet("userName")]
         [ProducesResponseType(200, Type = typeof(User))]
         [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult GetUser(string userName)
         {
@@ -78,8 +80,10 @@ namespace CheckNGet.Controllers
             return Ok(orders);
         }
         [HttpPost]
-        [ProducesResponseType(204)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(422)]
+        [ProducesResponseType(500)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult CreateUser([FromBody] UserCreateDTO userCreate)
         {
@@ -112,6 +116,7 @@ namespace CheckNGet.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult UpdateUser(int userId, [FromBody] UserDTO updateUser)
         {

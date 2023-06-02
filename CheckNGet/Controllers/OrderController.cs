@@ -2,11 +2,9 @@
 using CheckNGet.Interface;
 using CheckNGet.Models;
 using CheckNGet.Models.DTO;
-using CheckNGet.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 
 namespace CheckNGet.Controllers
 {
@@ -28,6 +26,7 @@ namespace CheckNGet.Controllers
         }
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Order>))]
+        [ProducesResponseType(400)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult GetOrders()
         {
@@ -41,6 +40,7 @@ namespace CheckNGet.Controllers
         [HttpGet("{orderId}")]
         [ProducesResponseType(200, Type = typeof(Order))]
         [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult GetOrder(int orderId)
         {
@@ -57,10 +57,11 @@ namespace CheckNGet.Controllers
         [HttpGet("{orderId}/user")]
         [ProducesResponseType(200, Type = typeof(User))]
         [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
-        public IActionResult GetUserFromOrder(int orderId) 
+        public IActionResult GetUserFromOrder(int orderId)
         {
-            if(!_orderRepository.OrderExists(orderId))
+            if (!_orderRepository.OrderExists(orderId))
                 return NotFound();
 
             var user = _mapper.Map<UserDTO>(_orderRepository.GetUserFromOrder(orderId));
@@ -73,6 +74,7 @@ namespace CheckNGet.Controllers
         [HttpGet("{orderId}/dish")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Dish>))]
         [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult GetDishesFromOrder(int orderId)
         {
@@ -87,8 +89,11 @@ namespace CheckNGet.Controllers
             return Ok(dish);
         }
         [HttpPost]
-        [ProducesResponseType(204)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(422)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult CreateOrder([FromQuery] int userId, [FromQuery] int dishId, [FromBody] OrderDTO orderCreate)
         {
@@ -128,6 +133,7 @@ namespace CheckNGet.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult UpdateOrder(int orderId, [FromQuery] int dishId, [FromBody] OrderDTO updateOrder)
         {

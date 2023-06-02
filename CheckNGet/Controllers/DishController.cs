@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
 using CheckNGet.Interface;
-using CheckNGet.Models.DTO;
 using CheckNGet.Models;
-using CheckNGet.Repository;
-using Microsoft.AspNetCore.Mvc;
+using CheckNGet.Models.DTO;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using System.Data;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CheckNGet.Controllers
 {
@@ -24,6 +22,7 @@ namespace CheckNGet.Controllers
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Dish>))]
+        [ProducesResponseType(400)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, User")]
         public IActionResult GetDishes()
         {
@@ -38,6 +37,7 @@ namespace CheckNGet.Controllers
         [HttpGet("{dishId}")]
         [ProducesResponseType(200, Type = typeof(Dish))]
         [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, User")]
         public IActionResult GetDish(int dishId)
         {
@@ -52,8 +52,10 @@ namespace CheckNGet.Controllers
             return Ok(dish);
         }
         [HttpPost]
-        [ProducesResponseType(204)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(422)]
+        [ProducesResponseType(500)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult CreateDish([FromQuery] int restaurantId, [FromQuery] int categoryId, [FromBody] DishDTO dishCreate)
         {
@@ -85,6 +87,7 @@ namespace CheckNGet.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult UpdateDish(int dishId, [FromQuery] int restaurantId, [FromQuery] int categoryId, [FromBody] DishDTO updateDish)
         {

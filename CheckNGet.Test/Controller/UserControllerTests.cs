@@ -3,15 +3,9 @@ using CheckNGet.Controllers;
 using CheckNGet.Interface;
 using CheckNGet.Models;
 using CheckNGet.Models.DTO;
-using CheckNGet.Repository;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CheckNGet.Test.Controller
 {
@@ -44,7 +38,7 @@ namespace CheckNGet.Test.Controller
         {
             var user = A.Fake<User>();
             var userDto = A.Fake<UserDTO>();
-            
+
             A.CallTo(() => _userRepository.UserExists(user.Id)).Returns(true);
             A.CallTo(() => _userRepository.GetUser(user.Id)).Returns(user);
             A.CallTo(() => _mapper.Map<UserDTO>(user)).Returns(userDto);

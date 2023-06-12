@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CheckNGet.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20230416135552_CreateMig")]
-    partial class CreateMig
+    [Migration("20230605113612_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

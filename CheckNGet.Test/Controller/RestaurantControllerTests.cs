@@ -3,15 +3,9 @@ using CheckNGet.Controllers;
 using CheckNGet.Interface;
 using CheckNGet.Models;
 using CheckNGet.Models.DTO;
-using CheckNGet.Repository;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CheckNGet.Test.Controller
 {

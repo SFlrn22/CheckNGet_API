@@ -3,15 +3,9 @@ using CheckNGet.Controllers;
 using CheckNGet.Interface;
 using CheckNGet.Models;
 using CheckNGet.Models.DTO;
-using CheckNGet.Repository;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CheckNGet.Test.Controller
 {
@@ -31,7 +25,7 @@ namespace CheckNGet.Test.Controller
         {
             var categories = A.Fake<List<Category>>();
             var categoryList = A.Fake<List<CategoryDTO>>();
-            
+
             A.CallTo(() => _categoryRepository.GetCategories()).Returns(categories);
             A.CallTo(() => _mapper.Map<List<CategoryDTO>>(categories)).Returns(categoryList);
 
@@ -131,7 +125,7 @@ namespace CheckNGet.Test.Controller
             A.CallTo(() => _categoryRepository.DeleteCategory(category)).Returns(true);
 
             var controller = new CategoryController(_categoryRepository, _dishRepository, _mapper);
-            
+
             var result = controller.DeleteCategory(categoryId);
 
             A.CallTo(() => _categoryRepository.GetDishByCategory(categoryId)).MustHaveHappenedOnceExactly();
